@@ -1,0 +1,16 @@
+<ion-view view-title="Venues">
+  <ion-content>
+    <ion-list>
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="venue in venues" type="item-text-wrap" href="#/tab/venues/{{venue.objectId}}">
+        <img ng-src="{{venue.logo}}">
+        <h2>{{venue.name}}</h2>
+        <p>{{venue.createdAt}}</p>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+
+        <ion-option-button class="button-assertive" ng-click="remove(venue)">
+          Delete
+        </ion-option-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>
