@@ -1,4 +1,4 @@
-angular.module('starter.services', [])
+angular.module('combo.services', [])
 
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
@@ -49,68 +49,82 @@ angular.module('starter.services', [])
   };
 })
 
-/**************************
- * Venues Service
- *************************/
 .factory('Venues', function() {
-
-  var PlaceObject = Parse.Object.extend("Place");
-  var query = new Parse.Query(PlaceObject);
-  // filters
-  // if (params !== undefined) {
-  //   if (params.name !== undefined) {
-  //     query.equalTo("name", params.name);
-  //   }
-  // }
 
   var venues = [];
 
-  console.log("Query Venues0 (venues init):");
-  console.log(venues);
-
-  query.find().then(function(results) {
-
-    for (var i = 0; i < results.length; i++) {
-      venues.push(results[i].toJSON())
-    }
-    console.log("Query Venues3 (fetch from datastore):")
-    console.log(venues)
-
-  }, function(error) {
-    console.log("Error " + error.code + ": " + error.message)
-  })
-
-  console.log("Query Venues1 (query triggered, waiting callback):");
-  console.log(venues);
-
-  // @TODO: loga Venues2 antes do Venues1...
-  // por isso retorna venues nulo enquanto callback chama o Parse
-  // na segunda vez que entra na tela a lista (venues) está populada no ponteiro
-  var iMilliSeconds = 1000;
-  var counter = 0
-  var start = new Date().getTime()
-  while (counter < iMilliSeconds) {
-    counter = (new Date().getTime()) - start;
-  }
+  venues = queryVenues();
+  // var PlaceObject = Parse.Object.extend("Place");
+  // var query = new Parse.Query(PlaceObject);
+  // query.find().then(function(results) {
+  //   if(results.length>0){
+  //     for (var i = 0; i < results.length; i++)
+  //       venues.push(results[i].toJSON())
+  //   }else{
+  //     venues = null;
+  //   }
+  // }, function(error) {
+  //   console.error("Error " + error.code + ": " + error.message)
+  //   venues = null;
+  // })
 
   return {
 
     all: function() {
-
-      console.log("Query Venues2 (return):")
-      console.log(venues)
       return venues;
-
     },
+
+    refresh: function() {
+      venues = queryVenues()
+      return venues;
+    },
+
     remove: function(venue) {
       venues.splice(venues.indexOf(venue), 1);
     },
+
     get: function(venueId) {
       for (var i = 0; i < venues.length; i++) {
-        if (venues[i].objectId === venueId)
+        if (venues[i].objectId === venueId) {
           return venues[i];
+        }
       }
       return null;
     }
+
   }
 });
+
+
+/**
+ * Utilitary to wait miliseconds
+ */
+function waitTimer(miliseconds) {
+  var iMilliSeconds = miliseconds;
+  var counter = 0
+  var start = new Date().getTime()
+  while (counter < iMilliSeconds) {
+    counter = (new Date().getTime()) - start
+  }
+  return
+}
+
+function queryVenues() {
+  console.log('Init queryVenues');
+  var venues = [];
+  var PlaceObject = Parse.Object.extend("Place");
+  var query = new Parse.Query(PlaceObject);
+  query.find().then(function(results) {
+    if (results.length > 0) {
+      for (var i = 0; i < results.length; i++)
+        venues.push(results[i].toJSON())
+    } else {
+      venues = null;
+    }
+  }, function(error) {
+    console.error("Error " + error.code + ": " + error.message)
+    venues = null;
+  });
+  console.log('Finish queryVenues');
+  return venues;
+}

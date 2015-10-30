@@ -1,4 +1,4 @@
-angular.module('starter.controllers', [])
+angular.module('combo.controllers', [])
 
 .controller('DashCtrl', function($scope) {
 
@@ -80,37 +80,36 @@ angular.module('starter.controllers', [])
 /**************************
  * Venues Controller
  *************************/
-.controller('VenuesCtrl', function($scope, Venues) {
+.controller('VenuesCtrl', function($scope, $timeout, Venues) {
+  console.log('VenuesCtrl init');
+  console.log($scope);
 
   // $scope.$on('$ionicView.enter', function(e) {
-  console.log('Controller passed venues to view');
-  // Venues.all().then(function(response){
-  //   console.log('response:');
-  //   console.log(response);
-  //   $scope.venues = response;
-  // });
+  console.log('Init Venues.all()');
   $scope.venues = Venues.all();
-  // console.log($scope.venues);
   // });
 
   $scope.remove = function(venue) {
     Venues.remove(venue);
   };
+
+  $scope.doRefresh = function() {
+    console.log('Refreshing!');
+    $timeout(function() {
+      $scope.venues = Venues.refresh();
+      $scope.$broadcast('scroll.refreshComplete');
+    }, 100);
+
+  };
+
+  console.log('VenuesCtrl finish');
 })
 
 /**************************
  * Venue Detail Controller
  *************************/
 .controller('VenueDetailCtrl', function($scope, $stateParams, Venues) {
-  console.log('Entrou VenueDetailCtrl');
-  console.log($stateParams);
-  console.log($stateParams.venueId);
-  var v = Venues.get($stateParams.venueId)
-  console.log('VenueDetailCtrl Venues:');
-  console.log(Venues);
-  console.log('VenueDetailCtrl v:');
-  console.log(v);
-  $scope.venue = v
+  $scope.venue = Venues.get($stateParams.venueId)
 })
 
 .controller('AccountCtrl', function($scope) {
@@ -118,3 +117,16 @@ angular.module('starter.controllers', [])
     enableFriends: true
   };
 });
+
+
+function waitTimer(miliseconds) {
+  console.log('INIT waitTimer(' + miliseconds + ')...' + new Date());
+  var iMilliSeconds = miliseconds;
+  var counter = 0
+  var start = new Date().getTime()
+  while (counter < iMilliSeconds) {
+    counter = (new Date().getTime()) - start
+  }
+  console.log('FINISH waitTimer(' + miliseconds + ')...' + new Date());
+  return
+}
