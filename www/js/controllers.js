@@ -1,6 +1,6 @@
 angular.module('combo.controllers', [])
 
-.controller('DashCtrl', function($scope) {
+.controller('HomeCtrl', function($scope) {
 
   //Parse Promo ----------------
   $scope.getPromo = function(location, withinKilometers) {
@@ -115,6 +115,58 @@ angular.module('combo.controllers', [])
 .controller('AccountCtrl', function($scope) {
   $scope.settings = {
     enableFriends: true
+  };
+})
+
+.controller('SignupCtrl', function($scope) {
+  $scope.signup = function(form, user) {
+    console.log('Signup...');
+    console.log(form);
+    console.log(user);
+    if (form) {
+      if (form.$invalid) {
+        console.error(form.$error);
+        $scope.msg = {
+          info: form.$error.toString()
+        };
+        // alert('Error: ' + form.$error);
+      } else {
+        console.log('Username: ' + user.username);
+        console.log('Email: ' + user.email);
+        console.log('Password: ' + user.password);
+        var parseUser = new Parse.User();
+        parseUser.setUsername(user.username);
+        parseUser.setPassword(user.password);
+        parseUser.setEmail(user.email);
+
+        // other fields can be set just like with Parse.Object
+        parseUser.set("phone", "415-392-0202");
+
+        parseUser.signUp(null, {
+          success: function(parseUser) {
+            console.log('OK');
+            console.log(parseUser);
+          },
+          error: function(parseUser, error) {
+            // Show the error message somewhere and let the user try again.
+            console.error("Error: " + error.code + " " + error.message);
+            console.log(parseUser);
+            $scope.msg = {
+              info: error.message
+            };
+          }
+        });
+      }
+    }
+  };
+  $scope.reset = function(form) {
+    if (form) {
+      form.$setPristine();
+      form.$setUntouched();
+      form.email = '';
+      form.password = '';
+      form.username = '';
+    }
   };
 });
 

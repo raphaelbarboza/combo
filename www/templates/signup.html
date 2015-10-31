@@ -1,0 +1,32 @@
+<ion-view view-title="Sign Up">
+  <ion-content class="padding">
+
+    <div class="list card">
+      <!-- div class="item item-divider">Parse Actions</div -->
+      <div class="item item-body">
+
+        <div>
+          <form validate name="signupForm">
+
+            <label>Username:</label>
+            <input type="text" name="username" ng-model="user.username" placeholder="Enter a username" ng-required="true" ng-minlength="4" ng-maxlength="20">
+
+            <label>E-mail:</label>
+            <input type="email" name="email" ng-model="user.email" placeholder="Enter your email" ng-required="true">
+
+            <label>Password:</label>
+            <input type="password" name="password" ng-model="user.password" placeholder="Enter a password" ng-required="true" ng-minlength="4" ng-maxlength="20">
+
+            <input type="submit" ng-click="signup(signupForm, user)" value="Go!">
+            <input type="reset" ng-click="reset(signupForm)" value="Reset">
+
+            <input type="text" name="msg" ng-model="msg.info" ng-required="false">
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+
+  </ion-content>
+</ion-view>
